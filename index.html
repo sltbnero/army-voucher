@@ -1,0 +1,620 @@
+<!DOCTYPE html>
+<html lang="si">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>වවුචර් පත් සාරාංශය - ශ්‍රී ලංගම නුවරඑළිය</title>
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#0e0e10">
+<link rel="icon" type="image/png" href="icon-192.png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="වවුචර් සාරාංශය">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+Sinhala:wght@400;600;700&display=swap">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/exceljs/4.4.0/exceljs.min.js"></script>
+<style>
+:root{--bg:#f4f5f7;--fg:#1d2330;--card:#fff;--bd:#d5d9e0;--ac:#1f5fbf;--mut:#667085;color-scheme:light}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#14171d;--fg:#e8eaf0;--card:#1e222b;--bd:#343a47;--ac:#6ea2ff;--mut:#9aa3b5;color-scheme:dark}}
+*{box-sizing:border-box}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--fg);font:15px/1.5 "Noto Sans Sinhala","Iskoola Pota",system-ui,sans-serif;padding:env(safe-area-inset-top,0px) 0 env(safe-area-inset-bottom,0px)}
+.wrap{padding:16px;max-width:900px;margin:auto}
+@media(max-width:900px){.wrap{grid-template-columns:1fr}}
+.card{background:var(--card);border:1px solid var(--bd);border-radius:10px;padding:14px;margin-bottom:14px}
+h1{font-size:18px;margin:0 0 4px}h2{font-size:15px;margin:0 0 8px}
+.mut{color:var(--mut);font-size:13px}
+label{display:block;font-size:13px;color:var(--mut);margin:8px 0 2px}
+input,select,button{font:inherit;color:var(--fg);background:var(--card);border:1px solid var(--bd);border-radius:6px;padding:6px 8px}
+input,select{width:100%}
+button{cursor:pointer;width:auto}button.p{background:var(--ac);border-color:var(--ac);color:#fff}
+.row{display:grid;grid-template-columns:1.3fr 1fr 1fr auto;gap:4px;margin-bottom:4px}
+.tabs{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:8px}.tabs button{flex:1 1 30%;padding:8px 4px;font-weight:600;font-size:13px}.tabs button.on{background:var(--ac);border-color:var(--ac);color:#fff}.dtabs{display:flex;gap:6px;overflow-x:auto;padding-bottom:8px;margin-bottom:6px}.dtabs button{white-space:nowrap;padding:6px 10px;flex:none}.dtabs button.on{background:var(--ac);border-color:var(--ac);color:#fff}.li input,.q input{min-width:0}.q2{display:grid;grid-template-columns:1fr 1fr;gap:0 12px}.q2 .q input{padding:6px 4px;font-size:14px}.q{display:grid;grid-template-columns:1fr 1fr;gap:4px;margin:6px 0}textarea{width:100%;font:inherit;color:var(--fg);background:var(--card);border:1px solid var(--bd);border-radius:6px;padding:6px;margin:4px 0}.dh{font-weight:600;margin:10px 0 2px;display:flex;justify-content:space-between}.li{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr) auto auto;gap:4px;align-items:center;border-bottom:1px solid var(--bd);padding:2px 0}.li button{padding:7px 9px;display:flex;align-items:center;justify-content:center}.li button.dl{color:#d92d20}.li button.sv{background:#12a150;border-color:#12a150;color:#fff;font-size:13px;white-space:nowrap}.li input.ro{background:rgba(127,127,127,.08);border-color:transparent}.li input.ed{border-color:var(--ac);box-shadow:0 0 0 2px rgba(31,95,191,.25)}.li button svg{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}input[type=number]{-moz-appearance:textfield;appearance:textfield}input[type=number]::-webkit-outer-spin-button,input[type=number]::-webkit-inner-spin-button{-webkit-appearance:none;margin:0}.bad{border-color:#d92d20!important;background:rgba(217,45,32,.12)!important}.err{color:#d92d20;font-size:13px;margin:4px 0}.r2{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.bar{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
+.paper{background:#fff;color:#000;border:1px solid var(--bd);border-radius:4px;padding:36px 40px;margin-bottom:16px;overflow-x:auto;font-size:14px}
+.paper h3{font-size:15px;margin:14px 0 6px}
+.paper table{border-collapse:collapse;width:100%;margin:6px 0 14px}
+.paper th,.paper td{border:1px solid #000;padding:3px 8px;text-align:left}
+.paper td.n,.paper th.n{text-align:right}.paper tr.t td{font-weight:700}
+.paper .sig{display:flex;justify-content:space-between;margin:90px 0 20px}
+.paper p{margin:6px 0}
+.letter th,.letter td,.pb th,.pb td{text-align:center!important}.letter p{text-align:justify;text-justify:inter-character}.letter h3.ttl{text-decoration:underline;text-underline-offset:3px;text-align:justify}.fl{font-size:inherit;display:flex;align-items:flex-end;gap:6px;text-align:left!important}.fl span:first-child{white-space:nowrap}.fl .ds{flex:1;min-width:40px;height:1.1em;border-bottom:1.5px dotted #000}.paper.letter{font-size:13px;line-height:1.35}.paper.letter p{margin:4px 0}.paper.letter h3{font-size:14px;margin:8px 0 4px}.paper.letter table{margin:4px auto 8px;width:75%;table-layout:fixed}.paper.letter th,.paper.letter td{padding:3px 8px}.paper.letter p.ad{margin-top:16px}.paper.letter h3.ttl{margin:16px 0 14px}.paper.letter .sig{margin:80px 0 70px}@page{size:A4;margin:12mm}.nw{white-space:nowrap}.lt th,.lt td{height:7mm;padding:0 8px}.lt thead th{height:8mm}tbody.g{break-inside:avoid;page-break-inside:avoid}.paper tr{break-inside:avoid;page-break-inside:avoid}thead{display:table-header-group}
+.rt{width:100%;border-collapse:separate;border-spacing:4px}.rt th{font-size:13px;color:var(--mut);font-weight:600}.rt td:first-child{font-weight:600;white-space:nowrap;padding-right:6px}
+.rb{width:100%;padding:11px 2px;font-weight:700;border-radius:8px}
+.rb.y{background:#d7f5df;color:#0a6b34;border-color:#8bd4a5}.rb.n{background:#fde0e0;color:#b42318;border-color:#f3a6a6}.rb.z{background:transparent;color:var(--mut);border-style:dashed}
+.yg{border-collapse:collapse;font-size:12px;white-space:nowrap}.yg th,.yg td{border:1px solid var(--bd);padding:3px 5px;text-align:center}.yg th{background:rgba(120,120,255,.15)}.yg td.y{background:#d7f5df;color:#0a6b34}.yg td.n{background:#fde0e0;color:#b42318}.paper td.am{text-align:right!important;padding-right:16px}.pb{break-before:page}
+.md{position:fixed;inset:0;background:rgba(0,0,0,.55);align-items:center;justify-content:center;z-index:50;padding:16px}.mb{background:var(--card);color:var(--fg);border:1px solid var(--bd);border-radius:10px;padding:16px;max-width:360px;width:100%}#mt{white-space:pre-line;font-size:16px}.tagbox{display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:6px;padding:24px 8px;border:2px solid #000;border-radius:0;margin-bottom:12px;background:#fff;color:#000;font-weight:700;box-sizing:border-box}.nob .tagbox{border:0!important}
+.p8{display:grid;grid-template-columns:1fr 1fr;gap:8px}.p8 .tagbox{margin:0;padding:12px 4px;min-height:90px}.p8 .tg1{font-size:clamp(11px,3vw,18pt)}.p8 .tg2{font-size:clamp(9px,2.3vw,14pt)}
+.mg{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin:6px 0}.mg label{display:flex;align-items:center;gap:6px;margin:0;color:var(--fg);font-size:14px;border:1px solid var(--bd);border-radius:6px;padding:6px 8px}.mg input{width:auto}
+.tg1{font-size:clamp(16px,4.8vw,40pt);line-height:1.25}.tg2{font-size:clamp(13px,3.6vw,30pt);line-height:1.25}
+@media print{.tagbox{height:124mm;margin:0 0 4mm;padding:0 4mm;break-inside:avoid}.tg1{font-size:40pt}.tg2{font-size:30pt}.p8{gap:4mm}.p8 .tagbox{height:62mm;margin:0;padding:0 3mm}.p8 .tg1{font-size:18pt}.p8 .tg2{font-size:14pt}.p3 .tagbox{height:85mm}.p3 .tg1{font-size:30pt}.p3 .tg2{font-size:24pt}#c_tag{display:none}body.ptag #c_let{display:none!important}body.ptag #c_tag{display:block!important}}
+.ft{text-align:center;color:#d92d20;font-weight:600;font-size:18px;padding:8px 16px 20px}@media print{body{background:#fff}#c_let{display:block!important}.wrap{max-width:none}.ft{display:none}.ctl{display:none}.wrap{display:block;padding:0}.paper{border:0;padding:0;margin:0}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<div class="ctl">
+ <div style="margin-bottom:10px"><h1>වවුචර් පත් සාරාංශය</h1><div class="mut">දත්ත ඇතුළත් කරන්න, ලිපිය හා වගු ස්වයංක්‍රීයව සැකසේ.</div></div>
+ <div class="tabs"><button id="t_army" class="on" onclick="tab('army')"></button><button id="t_air" onclick="tab('air')"></button><button id="t_rcv" onclick="tab('rcv')">📥 ලැබුණු වගුව</button><button id="t_let" onclick="tab('let')">📄 ලිපිය</button><button id="t_tag" onclick="tab('tag')">🏷 ටැග්</button><button id="t_set" onclick="tab('set')">⚙ සැකසුම්</button></div>
+ <div class="card" id="c_set" style="display:none">
+  <div class="r2">
+   <div><label>මාසය</label><select id="mo"></select></div>
+   <div><label>වර්ෂය</label><input id="yr" type="number"></div>
+  </div>
+  <div id="um" class="mut" style="display:none;margin-top:6px">අලුත් මාසයට මාරු වුණා, වවුචර් මැකුවා. <button onclick="undo()">ආපසු ගන්න</button></div>
+  <div class="r2">
+   <div><label>මාගේ අංකය</label><input id="ref"></div>
+   <div><label>දිනය</label><input id="dt" type="date"></div>
+  </div>
+  
+  <label>පැරණි Excel (.xls) ගොනුවකින් ආයාත කරන්න</label>
+  <input type="file" id="fi" accept=".xls,.xlsx">
+  <h2 style="margin-top:18px">Backup</h2>
+  <div class="mut">Chrome / Edge (computer) එකේ ෆෝල්ඩරයක් තෝරලා දුන්නොත්, වවුචර් ඇතුලත් කරද්දි ඉබේම backup වේ.</div>
+  <div class="bar"><button class="p" onclick="bpick()">Backup ෆෝල්ඩරය තෝරන්න</button><button id="bgr" style="display:none" onclick="bgrant()">නැවත අවසර දෙන්න</button></div>
+  <div id="bs" class="mut" style="margin:6px 0"></div>
+  <label style="display:flex;align-items:flex-start;gap:8px;margin-top:10px;color:var(--fg)"><input type="checkbox" id="bauto" checked style="width:auto;margin-top:4px" onchange="bauto(this.checked)"> ෆෝල්ඩරයක් තෝරලා නැත්නම්: විනාඩි 30කට වරක් (වෙනස්කමක් වුණොත්) Downloads ෆෝල්ඩරයට auto backup බාගන්න</label>
+  <div class="bar"><button onclick="bdl()">දැන්ම Backup බාගන්න (.json)</button></div>
+  <label>Backup එකකින් ආපසු ගන්න (.json)</label>
+  <input type="file" id="bf" accept=".json" onchange="brest(this)">
+ </div>
+ <div class="card" id="c_army"><div id="fa"></div><div class="mut" style="margin:14px 0 6px">ඇතුළත් කළ වවුචර් (ඩිපෝව තෝරන්න)</div><div class="dtabs" id="dt_army"></div><div id="ea"></div></div>
+ <div class="card" id="c_air" style="display:none"><div id="fb"></div><div class="mut" style="margin:14px 0 6px">ඇතුළත් කළ වවුචර් (ඩිපෝව තෝරන්න)</div><div class="dtabs" id="dt_air"></div><div id="eb"></div></div>
+</div>
+<div id="c_rcv" style="display:none"><div class="card">
+  <h2>වවුචර් ලැබුණු වගුව</h2>
+  <div class="mut">ඩිපෝවෙන් වවුචර් ලැබෙද්දි බොත්තම ටැප් කරන්න: <b>ඇත</b> → <b>නැත</b> → හිස් (තවම නැහැ).</div>
+  <div class="r2"><div><label>මාසය</label><select id="rm"></select></div><div><label>වර්ෂය</label><input id="ry" type="number"></div></div>
+  <label>ලැබුණු දිනය (ටැප් කරද්දි මේ දිනය සටහන් වේ)</label><input id="rdt" type="date">
+  <div class="bar"><button onclick="rnav(-1)">◀ කලින් මාසය</button><button onclick="rnav(1)">ඊළඟ මාසය ▶</button></div>
+  <div id="rt" style="margin-top:8px"></div>
+  <div id="rs" class="mut" style="margin-top:6px"></div>
+  <div class="mut" style="margin-top:4px;font-size:12px">දිනය පෙන්නන්නේ බොත්තම යට. mouse එක බොත්තමට ගෙනියද්දි සම්පූර්ණ දිනය පෙනේ. දිනය වෙනස් කරන්න: ලැබුණු දිනය තෝරලා බොත්තම දිගු වේලාවක් එබුවාම (right-click) ඒ දිනය සටහන් වේ.</div>
+  <details style="margin-top:12px"><summary>වාර්ෂික වගුව බලන්න</summary><div id="ryr" style="overflow-x:auto;margin-top:8px"></div></details>
+  <div class="bar" style="margin-top:12px"><button class="p" onclick="rxl()">Excel ලෙස ගබඩා කරන්න</button></div>
+  <label>පැරණි වගුව Excel (.xlsx) එකෙන් ආයාත කරන්න</label>
+  <input type="file" id="rf" accept=".xlsx,.xls">
+ </div></div>
+<div id="c_let" style="display:none"><div class="bar ctl" style="margin:0 0 12px"><button class="p" onclick="window.print()">මුද්‍රණය / PDF</button><button onclick="xport()">Excel ලෙස ගබඩා කරන්න</button></div><div id="out"></div></div>
+</div>
+<div id="c_tag" style="display:none"><div class="card ctl"><h2>ටැග් (ෆයිල් ලේබල්)</h2>
+  <div class="r2"><div><label>වර්ගය</label><select id="tt"><option value="army">යුධ හමුදා වවුචර්පත්</option><option value="air">ගුවන් හමුදා වවුචර්පත්</option><option value="both">දෙකම</option></select></div><div><label>වර්ෂය</label><input id="ty" type="number"></div></div>
+  <label>ටැග් හදන්න ඕන මාස tick කරන්න</label>
+  <div class="mg" id="tm"></div>
+  <div class="bar" style="margin:0 0 6px"><button onclick="tmall(true)">සියලුම මාස</button><button onclick="tmall(false)">හිස් කරන්න</button></div>
+  <div class="r2"><div><label>ටැග් ප්‍රමාණය</label><select id="tp"><option value="p2">විශාල (A4 එකකට 2)</option><option value="p3" selected>මධ්‍යම (A4 එකකට 3)</option><option value="p8">කුඩා (A4 එකකට 8)</option></select></div><div></div></div>
+  <label style="display:flex;align-items:center;gap:8px;margin-top:10px"><input type="checkbox" id="to" checked style="width:auto"> ටැග් වටේ outline (ඉර) දාන්න</label>
+  <div class="bar"><button class="p" onclick="ptags()">ටැග් මුද්‍රණය</button></div></div>
+ <div id="tags" class="p3"></div></div>
+<div id="md" class="md" style="display:none"><div class="mb"><div id="mt"></div><div class="bar"><button class="p" id="mok">හරි</button><button id="mcn">අවලංගුයි</button></div></div></div>
+<footer class="ft">Developed by Jeewan Madhusanka Kariyawasam</footer>
+<div id="instw" style="display:none;position:fixed;left:50%;transform:translateX(-50%);bottom:calc(14px + env(safe-area-inset-bottom,0px));z-index:50;text-align:center;max-width:92%;background:var(--card);border:1px solid var(--bd);border-radius:12px;padding:8px 12px;box-shadow:0 4px 18px rgba(0,0,0,.25)"><button type="button" id="instb" class="p">📲 ඇප් එක Install කරන්න</button><span id="insth" class="mut" style="display:none"></span></div>
+<script>
+(function(){
+ const ua=navigator.userAgent||"";let n="";
+ if(navigator.brave)n="Brave";
+ else if(/Edg(e|A|iOS)?\//.test(ua))n="Microsoft Edge";
+ else if(/OPR\/|Opera/.test(ua))n="Opera";
+ else if(/Firefox\/|FxiOS/.test(ua))n="Firefox";
+ else if(/Vivaldi|SamsungBrowser|UCBrowser|DuckDuckGo/.test(ua))n="වෙනත් browser එකක්";
+ else if(/; wv\)|Version\/[\d.]+.*Chrome/.test(ua))n="App එකක් ඇතුළත ඇති viewer එකක් (උදා: Claude app)";
+ else if(!/Chrome\/|CriOS\//.test(ua))n="Chrome නොවන browser එකක්";
+ if(!n)return;
+ document.body.innerHTML='<div style="max-width:520px;margin:40px auto;padding:20px;border:1px solid var(--bd);border-radius:12px;background:var(--card);line-height:1.7"><h1 style="font-size:20px">මෙම app එක Google Chrome එකේ විතරයි විවෘත කළ හැක</h1><p>ඔබ දැන් භාවිතා කරන්නේ: <b>'+n+'</b></p><p><b>Chrome එකේ විවෘත කරන්නේ මෙහෙමයි:</b></p><ol><li><b>voucher-app.html</b> ගොනුව ඇති තැනට යන්න.</li><li>ගොනුව <b>right-click → Open with → Google Chrome</b> කරන්න (computer එකේ).</li><li>නැත්නම් Chrome එක විවෘත කරලා ගොනුව ඒකට <b>drag &amp; drop</b> කරන්න.</li><li>Phone එකේ නම්: Files app එකේ ගොනුව ටැප් කරලා <b>Chrome</b> තෝරන්න.</li></ol></div>';
+ throw new Error("Open this app in Google Chrome");
+})();
+const D=["ගම්පොළ","නාවලපිටිය","හැටන්","නුවරඑළිය","කොත්මලේ","හඟුරන්කෙත","වලපනේ"];
+const K=[["ගම්පො"],["නාවල"],["හැටන්"],["නුවරඑළිය"],["කොත්ම"],["හඟුරන්","හගුරන්"],["වලපන"]];
+const MO=["ජනවාරි","පෙබරවාරි","මාර්තු","අප්‍රේල්","මැයි","ජූනි","ජූලි","අගෝස්තු","සැප්තැම්බර්","ඔක්තෝබර්","නොවැම්බර්","දෙසැම්බර්"];
+const today=(d=>d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0"))(new Date());
+const nd=new Date(),pm=new Date(nd.getFullYear(),nd.getMonth()-1,1);
+let S={m:pm.getMonth(),y:pm.getFullYear(),ref:"SLTB/NER/ACC/AM/9/"+nd.getFullYear(),dt:today,army:[],air:[]};
+try{const j=localStorage.getItem("vs2");if(j)S=JSON.parse(j)}catch(e){}
+const cm=today.slice(0,7);
+if(S.saved&&S.saved!==cm){S.army=[];S.air=[];S.m=pm.getMonth();S.y=pm.getFullYear()}
+S.saved=cm;S.rc=S.rc||{};S.rd=S.rd||{};S.dt=today;S.ref=S.ref.replace(/\/\d{4}$/,"/"+nd.getFullYear());
+const $=id=>document.getElementById(id);
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const f2=n=>(+n||0).toFixed(2),fa=n=>(+n||0).toLocaleString("en-US",{minimumFractionDigits:2,maximumFractionDigits:2}), p2=n=>String(n).padStart(2,"0");
+const dateTxt=()=>S.dt.replace(/-/g,".")+".";
+$("mo").innerHTML=MO.map((m,i)=>`<option value="${i}">${m}</option>`).join("");
+
+const r2=n=>Math.round(n*100)/100,NR=10,cur={army:0,air:0};
+function form(k,id){
+ $(id).innerHTML=`<select id="s_${k}"><option value="">— ඩිපෝව තෝරන්න —</option>${D.map((d,j)=>`<option value="${j}">${d}</option>`).join("")}</select>`+
+  `<div class="mut" style="font-size:12px;margin:6px 0 2px">① වවුචර් අංක දිගටම ගහන්න (Enter) &nbsp;②  අංක ඉවර වුණාම Enter එකක් වැඩියෙන් ගහලා වටිනාකම් ගහන්න</div>`+`<div class="q2">${[0,5].map(a=>`<div>${Array.from({length:5},(_,i)=>`<div class="q"><input id="v_${k}_${a+i}" placeholder="අංකය" inputmode="numeric"><input id="a_${k}_${a+i}" type="number" step="0.01" inputmode="decimal" placeholder="වටිනාකම"></div>`).join("")}</div>`).join("")}</div>`+
+  `<div id="tg_${k}" style="font-weight:600;margin:8px 0 2px"></div><div class="err" id="m_${k}"></div><div id="ok_${k}" style="color:#12a150;font-size:13px;margin:2px 0 4px"></div><button class="p" onclick="qadd('${k}')">ඇතුලත් කරන්න</button><details><summary class="mut">එකවර ගොඩක් paste කරන්න</summary><textarea id="b_${k}" rows="4" placeholder="වවුචර් අංකය   වටිනාකම (පේළියකට එකක්)"></textarea><button onclick="bulk('${k}')">තෝරාගත් ඩිපෝවට එක් කරන්න</button></details>`;
+ $("s_"+k).onchange=()=>swd(k);tg(k);
+ for(let i=0;i<NR;i++){
+  $(`v_${k}_${i}`).oninput=e=>e.target.classList.remove("bad");
+  $(`v_${k}_${i}`).onkeydown=e=>{if(e.key==="Enter"){e.preventDefault();if($(`v_${k}_${i}`).value.trim()&&i<NR-1)$(`v_${k}_${i+1}`).focus();else focusAmt(k)}};
+  $(`a_${k}_${i}`).onkeydown=e=>{if(e.key==="Enter"){e.preventDefault();let j=i+1;while(j<NR&&!$(`v_${k}_${j}`).value.trim())j++;if(j<NR)$(`a_${k}_${j}`).focus();else qadd(k)}};
+ }
+}
+const nv=v=>String(v).trim().replace(/^0+/,"");
+const has=v=>{const x=nv(v);return S.army.some(r=>nv(r.v)===x)||S.air.some(r=>nv(r.v)===x)};
+const dmsg=(k,bad)=>{$("m_"+k).textContent=bad.length?"දැනටමත් ඇතුළත් කර ඇති වවුචර් අංක: "+bad.join(", "):""};
+const ed={army:"",air:""};
+const tg=k=>{const v=$("s_"+k).value;$("tg_"+k).textContent=v===""?"⚠ මුලින්ම ඩිපෝව තෝරන්න":"ඇතුලත් වන්නේ: "+D[+v]+" ඩිපෝවට"};
+function swd(k){
+ const sel=$("s_"+k),nd=sel.value,pd=ed[k];
+ if(pd!==""&&nd!==pd){
+  sel.value=pd;qadd(k);
+  for(let r=0;r<NR;r++){if($(`v_${k}_${r}`).value||$(`a_${k}_${r}`).value){note("ඇතුළත් නොකළ පේළි ඇත. ඒවා සම්පූර්ණ කරන්න හෝ මකන්න, ඉන්පසු ඩිපෝව මාරු කරන්න.");tg(k);return}}
+  sel.value=nd;$("ok_"+k).textContent="";
+ }
+ ed[k]=sel.value;if(sel.value!=="")cur[k]=+sel.value;fields();tg(k);
+}
+function focusAmt(k){for(let j=0;j<NR;j++){if($(`v_${k}_${j}`).value.trim()){$(`a_${k}_${j}`).focus();return}}}
+function qadd(k){
+ if($("s_"+k).value===""){note("කලින් ඩිපෝව තෝරන්න.");$("s_"+k).focus();return}
+ const d=+$("s_"+k).value,bad=[];let n=0;
+ for(let i=0;i<NR;i++){
+  const v=$(`v_${k}_${i}`),a=$(`a_${k}_${i}`),x=v.value.trim(),y=r2(parseFloat(a.value));
+  v.classList.remove("bad");
+  if(x&&!isNaN(y)){
+   if(has(x)){v.classList.add("bad");bad.push(x)}
+   else{S[k].push({d,v:x,a:y});v.value="";a.value="";n++}
+  }
+ }
+ dmsg(k,bad);$("ok_"+k).textContent=n?"✔ "+n+" වවුචර් "+D[d]+" ඩිපෝවට ඇතුලත් කළා":"";cur[k]=d;fields();draw();
+ let f=0;for(let i=0;i<NR;i++){if($(`v_${k}_${i}`).value||$(`a_${k}_${i}`).value){f=i;break}}
+ $(`v_${k}_${f}`).focus();
+}
+function bulk(k){
+ if($("s_"+k).value===""){note("කලින් ඩිපෝව තෝරන්න.");$("s_"+k).focus();return}
+ const d=+$("s_"+k).value,bad=[];let n=0;
+ $("b_"+k).value.split(/\n/).forEach(l=>{const m=l.trim().split(/\s+/),a=r2(parseFloat((m[1]||"").replace(/,/g,"")));
+  if(m.length>=2&&/^\d+$/.test(m[0])&&!isNaN(a)){if(has(m[0]))bad.push(m[0]);else{S[k].push({d,v:m[0],a});n++}}});
+ $("b_"+k).value="";dmsg(k,bad);$("ok_"+k).textContent=n?"✔ "+n+" වවුචර් "+D[d]+" ඩිපෝවට ඇතුලත් කළා":"";cur[k]=d;fields();draw();
+}
+const TN={army:"යුධ හමුදා වවුචර්",air:"ගුවන් හමුදා වවුචර්"};
+function tab(k){for(const x of["set","army","air","rcv","let","tag"]){$("c_"+x).style.display=x===k?"":"none";$("t_"+x).classList.toggle("on",x===k)}if(k==="army"||k==="air"){try{$("v_"+k+"_0").focus()}catch(e){}}if(k==="tag")tagInit();if(k==="rcv")rinit()}
+const OPEN={army:false,air:false};
+function tgl(k){OPEN[k]=!OPEN[k];fields()}
+const gt=(k,d)=>{const r=S[k].filter(x=>x.d==d);return r.length+" | "+fa(r.reduce((t,x)=>t+(+x.a||0),0))};
+const isdup=(k,j,x)=>["army","air"].some(t=>S[t].some((r,i)=>!(t===k&&i===j)&&nv(r.v)===nv(x)));
+function evi(k,j,el){const x=el.value.trim();if(!x||isdup(k,j,x))return;S[k][j].v=x;draw()}
+function eai(k,j,el){const y=r2(parseFloat(el.value));if(isNaN(y))return;S[k][j].a=y;const g=$("gt_"+k+"_"+S[k][j].d);if(g)g.textContent=gt(k,S[k][j].d);draw()}
+function ev(k,j,el){
+ const x=el.value.trim();
+ if(!x){el.value=S[k][j].v;return}
+ const dup=["army","air"].some(t=>S[t].some((r,i)=>!(t===k&&i===j)&&nv(r.v)===nv(x)));
+ if(dup){el.classList.add("bad");dmsg(k,[x]);note("දැනටමත් ඇතුළත් කර ඇති වවුචර් අංකයක්: "+x);el.value=S[k][j].v;setTimeout(()=>el.classList.remove("bad"),1500);return}
+ S[k][j].v=x;dmsg(k,[]);draw();
+}
+function ea(k,j,el){
+ const y=r2(parseFloat(el.value));
+ if(isNaN(y)){el.value=S[k][j].a;return}
+ S[k][j].a=y;const g=$("gt_"+k+"_"+S[k][j].d);if(g)g.textContent=gt(k,S[k][j].d);draw();
+}
+function clr(k){ask("මෙම tab එකේ වවුචර් ඔක්කොම මකන්නද?",()=>{S[k]=[];dmsg(k,[]);fields();draw()})}
+function pick(k,i){cur[k]=i;fields()}
+function ask(msg,yes){$("mt").textContent=msg;$("mcn").style.display="";$("md").style.display="flex";$("mok").onclick=()=>{$("md").style.display="none";if(yes)yes()};$("mcn").onclick=()=>{$("md").style.display="none"}}
+function note(msg){$("mt").textContent=msg;$("mcn").style.display="none";$("md").style.display="flex";$("mok").onclick=()=>{$("md").style.display="none"}}
+const T={t:"army",y:0,sel:new Set(),touched:false};
+const tnm={army:"යුධ හමුදා වවුචර්පත්",air:"ගුවන් හමුදා වවුචර්පත්"};
+function tagInit(){
+ if(!T.touched){T.y=S.y;T.sel=new Set([S.m])}
+ $("tt").value=T.t;$("ty").value=T.y;
+ $("tm").innerHTML=MO.map((m,i)=>`<label><input type="checkbox" ${T.sel.has(i)?"checked":""} onchange="tm(${i},this.checked)">${m}</label>`).join("");
+ tags();
+}
+function tm(i,on){if(on)T.sel.add(i);else T.sel.delete(i);T.touched=true;tags()}
+function tmall(on){T.sel=on?new Set(MO.map((_,i)=>i)):new Set();T.touched=true;tagInit()}
+function tags(){
+ const types=T.t==="both"?["army","air"]:[T.t],ms=[...T.sel].sort((a,b)=>a-b);let h="";
+ for(const m of ms)for(const k of types)h+=`<div class="tagbox"><div class="tg1">${tnm[k]}</div><div class="tg1">${T.y} ${MO[m]}</div><div class="tg2">ශ්‍රී ලංකා ගමනා ගමන මණ්ඩලය</div><div class="tg1">නුවරඑළිය ප්‍රාදේශිකය</div></div>`;
+ $("tags").innerHTML=h||'<div class="mut">ටැග් හදන්න ඕන මාස tick කරන්න.</div>';
+}
+function ptags(){document.body.classList.add("ptag");try{window.print()}finally{document.body.classList.remove("ptag")}}
+const EDIT={army:new Set(),air:new Set()};
+function editRow(k,j){EDIT[k].add(S[k][j]);fields();const e=$("ei_"+k+"_"+j);if(e){e.focus();if(e.select)e.select()}}
+function cancelRow(k,j){EDIT[k].delete(S[k][j]);fields()}
+function saveRow(k,j){
+ const r=S[k][j];if(!r)return;
+ const v=$("ei_"+k+"_"+j).value.trim(),a=r2(parseFloat($("ea_"+k+"_"+j).value));
+ if(!v){note("වවුචර් අංකය හිස්ව තියෙන්න බෑ.");return}
+ if(isNaN(a)){note("වටිනාකම හරියට ගහන්න.");return}
+ if(isdup(k,j,v)){note("වවුචර් අංකය "+v+" දැනටමත් ඇතුළත් කර ඇත.");return}
+ r.v=v;r.a=a;EDIT[k].delete(r);fields();draw();
+}
+function del(k,i){const r=S[k][i];if(!r)return;ask("වවුචර් අංකය "+r.v+" ("+f2(r.a)+") මකන්නද?",()=>{S[k].splice(i,1);fields();draw()})}
+function fields(){
+ $("mo").value=S.m;$("yr").value=S.y;$("ref").value=S.ref;$("dt").value=S.dt;
+ for(const[k,id]of[["army","ea"],["air","eb"]]){
+  $("t_"+k).textContent=TN[k]+" ("+S[k].length+")";
+  $("dt_"+k).innerHTML=D.map((d,i)=>{const n=S[k].filter(x=>x.d==i).length;return`<button class="${i==cur[k]?"on":""}" onclick="pick('${k}',${i})">${d}${n?" ("+n+")":""}</button>`}).join("");
+  const r=S[k].map((x,j)=>({x,j})).filter(o=>o.x.d==cur[k]);
+  let h=r.length?`<div class="dh" style="cursor:pointer;border:1px solid var(--bd);border-radius:6px;padding:8px 10px" onclick="tgl('${k}')"><span>${OPEN[k]?"▲":"▼"} ${D[cur[k]]} ඩිපෝව</span><span id="gt_${k}_${cur[k]}">${gt(k,cur[k])}</span></div>`+(OPEN[k]?
+   r.map(o=>{const ie=EDIT[k].has(o.x),rd=ie?"":"readonly",cl=ie?"ed":"ro",kd=ie?` onkeydown="if(event.key==='Enter')saveRow('${k}',${o.j});if(event.key==='Escape')cancelRow('${k}',${o.j})"`:"";
+    return`<div class="li"><input id="ei_${k}_${o.j}" value="${esc(o.x.v)}" ${rd} class="${cl}"${kd}><input id="ea_${k}_${o.j}" type="number" step="0.01" value="${o.x.a}" ${rd} class="${cl}"${kd}>`+
+    (ie?`<button class="sv" title="සුරකින්න" onclick="saveRow('${k}',${o.j})">✔ සුරකින්න</button><button title="අවලංගු" aria-label="අවලංගු" onclick="cancelRow('${k}',${o.j})"><svg viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></svg></button>`
+    :`<button title="වෙනස් කරන්න" aria-label="වෙනස් කරන්න" onclick="editRow('${k}',${o.j})"><svg viewBox="0 0 24 24"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg></button><button class="dl" title="මකන්න" aria-label="මකන්න" onclick="del('${k}',${o.j})"><svg viewBox="0 0 24 24"><path d="M3 6h18"/><path d="M8 6V4h8v2"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6M14 11v6"/></svg></button>`)+"</div>"}).join(""):""):'<div class="mut">මෙම ඩිපෝවට වවුචර් නොමැත</div>';
+  if(S[k].length&&OPEN[k])h+=`<button style="margin-top:10px" onclick="clr('${k}')">සියලුම ඩිපෝවල වවුචර් මකන්න</button>`;
+  $(id).innerHTML=h;
+ }
+}
+let undoBak=null;
+$("mo").onchange=e=>{
+ if(S.army.length||S.air.length){undoBak={army:S.army,air:S.air,m:S.m};S.army=[];S.air=[];$("um").style.display=""}
+ S.m=+e.target.value;fields();draw();
+};
+function undo(){if(!undoBak)return;S.army=undoBak.army;S.air=undoBak.air;S.m=undoBak.m;undoBak=null;$("um").style.display="none";fields();draw()}
+$("yr").oninput=e=>{S.y=+e.target.value;draw()};
+$("ref").oninput=e=>{S.ref=e.target.value;draw()};
+$("dt").oninput=e=>{S.dt=e.target.value;if(S.dt){S.ref=S.ref.replace(/\/\d{4}$/,"/"+S.dt.slice(0,4));$("ref").value=S.ref}draw()};
+
+function sum(rows){return D.map((_,i)=>{const r=rows.filter(x=>x.d==i);return{n:r.length,t:r.reduce((s,x)=>s+(+x.a||0),0)}})}
+function sumTable(rows){
+ const s=sum(rows),N=s.reduce((a,x)=>a+x.n,0),T=s.reduce((a,x)=>a+x.t,0);
+ return`<table><tr><th>ඩිපෝව</th><th class="n">වවුචර් පත් ගණන</th><th class="n">මුළු වටිනාකම</th></tr>`+
+ D.map((d,i)=>`<tr><td>${d}</td><td class="n">${s[i].n?p2(s[i].n):"-"}</td><td class="am">${s[i].n?fa(s[i].t):"-"}</td></tr>`).join("")+
+ `<tr class="t"><td>එකතුව</td><td class="n">${N?p2(N):"-"}</td><td class="am">${N?fa(T):"-"}</td></tr></table>`;
+}
+function listTable(title,rows){
+ const flat=[];
+ D.forEach((d,i)=>{const r=rows.filter(x=>x.d==i);if(!r.length){flat.push({i,none:1});return}r.forEach(x=>flat.push({i,v:x.v,a:x.a}))});
+ let T=0;flat.forEach((x,k)=>{x.n=k+1;if(!x.none)T+=+x.a||0});
+ const pg=[];let cur=[],cap=30;
+ flat.forEach(x=>{if(cur.length>=cap){pg.push(cur);cur=[];cap=34}cur.push(x)});pg.push(cur);
+ const capL=(pg.length==1?30:34)-11,last=pg[pg.length-1];
+ if(last.length>capL)pg.push(last.splice(capL));
+ const ym=S.y+" "+MO[S.m];
+ const head='<thead><tr><th>අ.අ.</th><th>ඩිපෝව</th><th>වර්ෂය / මාසය</th><th>වවුචර්පත් අංකය</th><th class="n">වටිනාකම</th></tr></thead>';
+ const tbl=(chunk,isLast)=>{
+  let h="",k=0;
+  while(k<chunk.length){
+   let e=k;while(e+1<chunk.length&&chunk[e+1].i===chunk[k].i&&!chunk[e+1].none&&!chunk[k].none)e++;
+   const len=e-k+1;
+   for(let m=k;m<=e;m++){const x=chunk[m];
+    h+=`<tr><td>${x.n}</td>${m===k?`<td rowspan="${len}" class="nw" style="vertical-align:middle">${D[x.i]} ඩිපෝව</td><td rowspan="${len}" class="nw" style="vertical-align:middle">${ym}</td>`:""}<td>${x.none?"නැත":esc(x.v)}</td><td class="${x.none?"n":"am"}">${x.none?"නැත":fa(x.a)}</td></tr>`}
+   k=e+1;
+  }
+  return`<table class="lt">${head}<tbody>${h}${isLast?`<tr class="t"><td colspan="4">මුළු එකතුව</td><td class="am">${fa(T)}</td></tr>`:""}</tbody></table>`;
+ };
+ return pg.map((c,k)=>`<div class="paper pb">${k===0?`<h3 style="text-align:center">${title}</h3><p style="text-align:center">${ym}</p><p>ප්‍රාදේශිකය - ශ්‍රී ලංගම නුවරඑළිය ප්‍රාදේශිකය</p>`:`<p style="text-align:center;font-size:12px">${title} - ${ym} (පිටුව ${k+1})</p>`}${tbl(c,k===pg.length-1)}${k===pg.length-1?sig():""}</div>`).join("");
+}
+
+const sig=()=>`<div class="sig"><div>ප්‍රාදේශීය මුදල් කළමනාකාර<br>ශ්‍රී ලංගම නුවරඑළිය ප්‍රාදේශිකය</div><div>ප්‍රධාන ප්‍රාදේශීය කළමනාකාර<br>ශ්‍රී ලංගම නුවරඑළිය ප්‍රාදේශිකය</div></div>`;
+
+function draw(){
+ const t=`${S.y} ${MO[S.m]} මස යුධ හමුදා වවුචර් හා ගුවන් හමුදා වවුචර් පත් භාර දීම.`;
+ $("out").innerHTML=`<div class="paper letter">
+ <p><b>මාගේ අංකය: ${esc(S.ref)}</b></p>
+ <p>ශ්‍රී ලංකා ගමනා ගමන මණ්ඩලය,<br>නුවරඑළිය ප්‍රාදේශිකය,<br>${dateTxt()}</p>
+ <p class="ad">මෙහෙයුම් කළමනාකාර තැන,<br>ශ්‍රී ලංකා ගමනා ගමන මණ්ඩලය.</p>
+ <h3 class="ttl">${t}<br>ශ්‍රී ලංකා ගමනා ගමන මණ්ඩලය - නුවරඑළිය ප්‍රාදේශිකය.</h3>
+ <p>ශ්‍රී ලංගම නුවරඑළිය ප්‍රාදේශීය කාර්යාලයට අයත් සියළුම ඩිපෝවන් වල ${S.y} ${MO[S.m]} මස යුධ හමුදා බිල්පත් හා ගුවන් හමුදා බිල්පත් මෙම ලිපිය සමඟ ඔබ වෙත ඉදිරිපත් කරමු.</p>
+ <h3>යුධ හමුදා වවුචර්පත්</h3>${sumTable(S.army)}
+ <h3>ගුවන් හමුදා වවුචර්පත්</h3>${sumTable(S.air)}
+ ${sig()}
+ <p>සියළුම වවුචර් පත් පරීක්ෂා කිරීමෙන් අනතුරුව නිවැරදි බව හා භාරගත් බව තහවුරු කරමි.</p>
+ <p class="fl"><span>ප්‍රධාන කාර්යාලයේ භාරගත් නිළධාරි මහතාගේ / මහත්මියගේ නම -</span><span class="ds"></span></p>
+ <p class="fl" style="max-width:50%"><span>දිනය -</span><span class="ds"></span></p><p class="fl" style="max-width:50%"><span>අත්සන -</span><span class="ds"></span></p></div>`
+ +listTable("යුද හමුදා වවුචර් බිල්පත් සාරාංශය",S.army)+(S.air.length?listTable("ගුවන් හමුදා වවුචර් බිල්පත් සාරාංශය",S.air):"");
+ try{localStorage.setItem("vs2",JSON.stringify(S))}catch(e){}
+ bq();
+}
+
+async function xport(){
+ if(typeof ExcelJS==="undefined"){note("Excel පුස්තකාලය පූරණය නොවීය (අන්තර්ජාලය අවශ්‍යයි).");return}
+ try{
+ const FN="Iskoola Pota",BD={style:"thin",color:{argb:"FF000000"}},GR={type:"pattern",pattern:"solid",fgColor:{argb:"FFE9ECEF"}};
+ const NF2='#,##0.00;-#,##0.00;"-"',NF0='00;-00;"-"',R2=n=>Math.round((+n||0)*100)/100;
+ const wb=new ExcelJS.Workbook();wb.creator="ශ්‍රී ලංගම නුවරඑළිය";wb.created=new Date();
+ const ym=S.y+" "+MO[S.m];
+ const cell=(ws,r,c,v,o={})=>{
+  const x=ws.getCell(r,c);if(v!==undefined)x.value=v;
+  x.font={name:FN,size:o.size||13,bold:!!o.b,underline:!!o.u};
+  x.alignment={horizontal:o.h||"left",vertical:"middle",wrapText:true,indent:o.ind||0};
+  if(o.box)x.border={top:BD,left:BD,bottom:BD,right:BD};
+  if(o.fill)x.fill=GR;if(o.nf)x.numFmt=o.nf;return x;
+ };
+ const merge=(ws,r,c1,c2)=>{if(c2>c1)ws.mergeCells(r,c1,r,c2)};
+ const page=(ws,h)=>{ws.pageSetup={paperSize:9,orientation:"portrait",fitToPage:true,fitToWidth:1,fitToHeight:h,horizontalCentered:true,margins:{left:.6,right:.6,top:.6,bottom:.6,header:.3,footer:.3}}};
+
+ /* ---------- ලිපිය ---------- */
+ const ws=wb.addWorksheet("ලිපිය",{views:[{showGridLines:false}]});
+ ws.columns=[{width:34},{width:26},{width:34}];
+ let r=0;
+ const L=(t,o={})=>{r++;cell(ws,r,1,t,o);merge(ws,r,1,3);if(o.ht)ws.getRow(r).height=o.ht};
+ const G=h=>{r++;ws.getRow(r).height=h||10};
+ L("මාගේ අංකය: "+S.ref,{b:true});
+ L("ශ්‍රී ලංකා ගමනා ගමන මණ්ඩලය,");L("නුවරඑළිය ප්‍රාදේශිකය,");L(dateTxt());G();
+ L("මෙහෙයුම් කළමනාකාර තැන,");L("ශ්‍රී ලංකා ගමනා ගමන මණ්ඩලය.");G();
+ L(ym+" මස යුධ හමුදා වවුචර් හා ගුවන් හමුදා වවුචර් පත් භාර දීම.",{b:true,u:true,ht:36});
+ L("ශ්‍රී ලංකා ගමනා ගමන මණ්ඩලය - නුවරඑළිය ප්‍රාදේශිකය.",{b:true,u:true});G();
+ L("ශ්‍රී ලංගම නුවරඑළිය ප්‍රාදේශීය කාර්යාලයට අයත් සියළුම ඩිපෝවන් වල "+ym+" මස යුධ හමුදා බිල්පත් හා ගුවන් හමුදා බිල්පත් මෙම ලිපිය සමඟ ඔබ වෙත ඉදිරිපත් කරමු.",{h:"justify",ht:40});G();
+ const tbl=(title,rows)=>{
+  L(title,{b:true});
+  r++;ws.getRow(r).height=24;
+  ["ඩිපෝව","වවුචර් පත් ගණන","මුළු වටිනාකම"].forEach((t,i)=>cell(ws,r,i+1,t,{b:true,h:"center",box:true,fill:true}));
+  const q=sum(rows);let N=0,T=0;
+  D.forEach((d,i)=>{
+   r++;ws.getRow(r).height=21;N+=q[i].n;T+=q[i].t;
+   cell(ws,r,1,d,{h:"center",box:true});
+   cell(ws,r,2,q[i].n,{h:"center",box:true,nf:NF0});
+   cell(ws,r,3,R2(q[i].t),{h:"right",ind:2,box:true,nf:NF2});
+  });
+  r++;ws.getRow(r).height=24;
+  cell(ws,r,1,"එකතුව",{b:true,h:"center",box:true,fill:true});
+  cell(ws,r,2,N,{b:true,h:"center",box:true,fill:true,nf:NF0});
+  cell(ws,r,3,R2(T),{b:true,h:"right",ind:2,box:true,fill:true,nf:NF2});
+ };
+ tbl("යුධ හමුදා වවුචර්පත්",S.army);G(14);tbl("ගුවන් හමුදා වවුචර්පත්",S.air);
+ G(58);
+ r++;cell(ws,r,1,"ප්‍රාදේශීය මුදල් කළමනාකාර",{b:true});cell(ws,r,3,"ප්‍රධාන ප්‍රාදේශීය කළමනාකාර",{b:true});
+ r++;cell(ws,r,1,"ශ්‍රී ලංගම නුවරඑළිය ප්‍රාදේශිකය");cell(ws,r,3,"ශ්‍රී ලංගම නුවරඑළිය ප්‍රාදේශිකය");
+ G(62);
+ L("සියළුම වවුචර් පත් පරීක්ෂා කිරීමෙන් අනතුරුව නිවැරදි බව හා භාරගත් බව තහවුරු කරමි.");
+ L("ප්‍රධාන කාර්යාලයේ භාරගත් නිළධාරි මහතාගේ / මහත්මියගේ නම - ................................................",{size:12});
+ L("දිනය - ......................................");L("අත්සන - ......................................");
+ page(ws,1);
+
+ /* ---------- ලැයිස්තු ---------- */
+ const lst=(name,title,rows)=>{
+  const w=wb.addWorksheet(name,{views:[{showGridLines:false}]});
+  w.columns=[{width:7},{width:26},{width:22},{width:22},{width:18}];
+  let q=0;
+  const H=(t,o)=>{q++;cell(w,q,1,t,o);merge(w,q,1,5)};
+  H(title,{b:true,h:"center",size:15});w.getRow(1).height=24;H(ym,{h:"center"});w.getRow(2).height=18;H("ප්‍රාදේශිකය - ශ්‍රී ලංගම නුවරඑළිය ප්‍රාදේශිකය");w.getRow(3).height=18;q++;w.getRow(q).height=10;
+  q++;w.getRow(q).height=10;q++;const hr=q;w.getRow(q).height=26;
+  const PH=720,RH=21;let used=24+18+18+10+10+26;
+  ["අ.අ.","ඩිපෝව","වර්ෂය / මාසය","වවුචර්පත් අංකය","වටිනාකම"].forEach((t,i)=>cell(w,q,i+1,t,{b:true,h:"center",box:true,fill:true}));
+  let n=0,T=0;
+  D.forEach((d,i)=>{
+   const g=rows.filter(x=>x.d==i);
+   if(!g.length){if(used+RH>PH&&used>26+RH){w.getRow(q).addPageBreak();used=26}used+=RH;q++;n++;w.getRow(q).height=21;
+    cell(w,q,1,n,{h:"center",box:true});cell(w,q,2,d+" ඩිපෝව",{h:"center",box:true});cell(w,q,3,ym,{h:"center",box:true});
+    cell(w,q,4,"නැත",{h:"center",box:true});cell(w,q,5,"නැත",{h:"center",box:true});return}
+   let top=0;const close=()=>{if(top&&q>top){w.mergeCells(top,2,q,2);w.mergeCells(top,3,q,3)}top=0};
+   g.forEach((x,j)=>{
+    const brk=used+RH>PH&&used>26+RH;
+    if(brk){close();w.getRow(q).addPageBreak();used=26}
+    q++;n++;T+=+x.a||0;used+=RH;w.getRow(q).height=21;
+    cell(w,q,1,n,{h:"center",box:true});
+    if(j===0||brk){cell(w,q,2,d+" ඩිපෝව",{h:"center",box:true});cell(w,q,3,ym,{h:"center",box:true});top=q}
+    cell(w,q,4,String(x.v),{h:"center",box:true});
+    cell(w,q,5,R2(x.a),{h:"right",ind:2,box:true,nf:NF2});
+   });
+   close();
+  });
+  if(used+150>PH){w.getRow(q).addPageBreak()}
+  q++;w.getRow(q).height=24;
+  for(let c=1;c<=5;c++)cell(w,q,c,undefined,{b:true,box:true,fill:true});
+  cell(w,q,1,"මුළු එකතුව",{b:true,h:"center",box:true,fill:true});merge(w,q,1,4);
+  cell(w,q,5,R2(T),{b:true,h:"right",ind:2,box:true,fill:true,nf:NF2});
+  q++;q++;q++;w.getRow(q).height=30;
+  cell(w,q,1,"ප්‍රාදේශීය මුදල් කළමනාකාර",{b:true});merge(w,q,1,2);cell(w,q,4,"ප්‍රධාන ප්‍රාදේශීය කළමනාකාර",{b:true});merge(w,q,4,5);
+  q++;cell(w,q,1,"ශ්‍රී ලංගම නුවරඑළිය ප්‍රාදේශිකය");merge(w,q,1,2);cell(w,q,4,"ශ්‍රී ලංගම නුවරඑළිය ප්‍රාදේශිකය");merge(w,q,4,5);
+  w.pageSetup={paperSize:9,orientation:"portrait",scale:90,horizontalCentered:true,margins:{left:.6,right:.6,top:.6,bottom:.6,header:.3,footer:.3},printTitlesRow:hr+":"+hr};
+ };
+ lst("යුධ ලැයිස්තුව","යුධ හමුදා වවුචර් බිල්පත් සාරාංශය",S.army);
+ if(S.air.length)lst("ගුවන් ලැයිස්තුව","ගුවන් හමුදා වවුචර් බිල්පත් සාරාංශය",S.air);
+
+ const buf=await wb.xlsx.writeBuffer();
+ const a=document.createElement("a");
+ a.href=URL.createObjectURL(new Blob([buf],{type:"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"}));
+ a.download="vouchers_"+S.y+"_"+p2(S.m+1)+".xlsx";
+ document.body.appendChild(a);a.click();setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove()},500);
+ }catch(e){note("Excel හදන්න බැරි වුණා: "+e.message)}
+}
+
+$("fi").onchange=e=>{
+ const f=e.target.files[0];if(!f)return;
+ if(typeof XLSX==="undefined"){note("Excel පුස්තකාලය පූරණය නොවීය (අන්තර්ජාලය අවශ්‍යයි).");return}
+ const rd=new FileReader();
+ rd.onload=()=>{
+  const wb=XLSX.read(rd.result,{type:"array"});let got=false,skipped=[];const seen=new Set();
+  wb.SheetNames.forEach(n=>{
+   const rows=XLSX.utils.sheet_to_json(wb.Sheets[n],{header:1,raw:true,defval:""});
+   const title=String(rows[0]&&rows[0][0]||"");
+   const k=title.includes("ගුවන්")?"air":(title.includes("යුද")?"army":null);if(!k)return;
+   const out=[];let cur=0;
+   rows.slice(7).forEach(r=>{
+    const c=String(r[2]||"");K.forEach((ks,i)=>{if(ks.some(x=>c.includes(x)))cur=i});
+    const v=String(r[5]).trim(),a=r[6];
+    if(/^\d+$/.test(v)&&typeof a==="number"){if(seen.has(nv(v)))skipped.push(v);else{seen.add(nv(v));out.push({d:cur,v,a})}}
+   });
+   S[k]=out;got=true;
+   if(k==="army"){const t2=String(rows[1]&&rows[1][0]||"");const mi=MO.findIndex(m=>t2.includes(m)),y=t2.match(/\d{4}/);if(mi>=0)S.m=mi;if(y)S.y=+y[0];}
+  });
+  if(!got)note("වවුචර් පත් හඳුනාගත නොහැකි විය.");else if(skipped.length)note("නැවත ඇති වවුචර් අංක මඟ හැරියා: "+skipped.join(", "));
+  fields();draw();e.target.value="";
+ };
+ rd.readAsArrayBuffer(f);
+};
+
+/* ---- ලැබුණු වගුව ---- */
+const RC={y:0,m:0,touched:false},TY=[["a","යුධ"],["f","ගුවන්"],["p","පොළිස් වවුචර්"]];
+const rk=(y,m,d,t)=>y+"|"+m+"|"+d+"|"+t;
+$("rm").innerHTML=MO.map((m,i)=>`<option value="${i}">${m}</option>`).join("");
+$("rm").onchange=e=>{RC.m=+e.target.value;RC.touched=true;rdraw()};
+$("ry").oninput=e=>{RC.y=+e.target.value||RC.y;RC.touched=true;rdraw()};
+function rinit(){if(!RC.touched){RC.y=S.y;RC.m=S.m}if(!$("rdt").value)$("rdt").value=today;$("rm").value=RC.m;$("ry").value=RC.y;rdraw()}
+function rnav(k){RC.m+=k;if(RC.m<0){RC.m=11;RC.y--}if(RC.m>11){RC.m=0;RC.y++}RC.touched=true;rinit()}
+function rjump(i){RC.m=i;RC.touched=true;rinit()}
+const rdv=()=>$("rdt").value||today;
+function rcyc(d,t){const k=rk(RC.y,RC.m,d,t),n=((S.rc[k]||0)+1)%3;if(n){S.rc[k]=n;S.rd[k]=rdv()}else{delete S.rc[k];delete S.rd[k]}rdraw();draw()}
+function rdate(d,t){const k=rk(RC.y,RC.m,d,t);if(!S.rc[k])return false;S.rd[k]=rdv();rdraw();draw();return false}
+function rdraw(){
+ let h='<table class="rt"><tr><th></th>'+TY.map(x=>`<th>${x[1]}</th>`).join("")+"</tr>",a=0,b=0,z=0;
+ D.forEach((d,i)=>{h+=`<tr><td>${d}</td>`+TY.map(([t])=>{const v=S.rc[rk(RC.y,RC.m,i,t)]||0;if(v==1)a++;else if(v==2)b++;else z++;
+  const dt=S.rd[rk(RC.y,RC.m,i,t)]||"",full=dt.replace(/-/g,"."),sm=dt?`<br><span style="font-weight:400;font-size:10px">${dt.slice(5).replace("-",".")}</span>`:"";
+  return`<td><button class="rb ${v==1?"y":v==2?"n":"z"}" title="${v?d+" – "+TY.find(x=>x[0]==t)[1]+": "+(v==1?"ඇත":"නැත")+(full?" ("+full+")":""):""}" onclick="rcyc(${i},'${t}')" oncontextmenu="return rdate(${i},'${t}')">${v==1?"ඇත":v==2?"නැත":"—"}${sm}</button></td>`}).join("")+"</tr>"});
+ $("rt").innerHTML=h+"</table>";
+ $("rs").textContent=MO[RC.m]+" "+RC.y+": ඇත "+a+" | නැත "+b+" | තවම සටහන් කර නැත "+z;
+ let g='<table class="yg"><tr><th rowspan="2">ඩිපෝව</th>'+MO.map((m,i)=>`<th colspan="3" style="cursor:pointer" onclick="rjump(${i})">${m}</th>`).join("")+"</tr><tr>"+MO.map(()=>"<th>යු</th><th>ගු</th><th>පො</th>").join("")+"</tr>";
+ D.forEach((d,i)=>{g+=`<tr><td>${d}</td>`;for(let m=0;m<12;m++)for(const[t]of TY){const v=S.rc[rk(RC.y,m,i,t)]||0;const dt=(S.rd[rk(RC.y,m,i,t)]||"").replace(/-/g,".");g+=`<td class="${v==1?"y":v==2?"n":""}"${v?` title="${d} – ${MO[m]}: ${v==1?"ඇත":"නැත"}${dt?" ("+dt+")":""}"`:""}>${v==1?"✔":v==2?"✖":""}</td>`}g+="</tr>"});
+ $("ryr").innerHTML=g+"</table>";
+}
+$("rf").onchange=e=>{
+ const f=e.target.files[0];if(!f)return;
+ if(typeof XLSX==="undefined"){note("Excel පුස්තකාලය පූරණය නොවීය (අන්තර්ජාලය අවශ්‍යයි).");return}
+ const rd=new FileReader();
+ rd.onload=()=>{
+  try{
+   const wb=XLSX.read(rd.result,{type:"array"});let n=0;const ys=[];
+   wb.SheetNames.forEach(nm=>{
+    const y=+String(nm).trim();if(!(y>=2000&&y<=2100))return;
+    const rows=XLSX.utils.sheet_to_json(wb.Sheets[nm],{header:1,raw:true,defval:""});
+    for(let r=2;r<rows.length;r++){
+     const row=rows[r],c0=String(row[0]||"");let d=-1;K.forEach((ks,i)=>{if(ks.some(x=>c0.includes(x)))d=i});if(d<0)continue;
+     for(let m=0;m<12;m++)for(let j=0;j<3;j++){const v=String(row[1+4*m+j]||""),c=v.includes("නැත")?2:v.includes("ඇත")?1:0;if(c){const kk=rk(y,m,d,"afp"[j]);S.rc[kk]=c;delete S.rd[kk];n++}}
+    }
+    ys.push(y);
+   });
+   if(!ys.length)throw new Error("වර්ෂ නම් (2025, 2026 වගේ) තියෙන sheet හොයාගන්න බැරි වුණා");
+   note("ආයාත කළා: සටහන් "+n+" ("+ys.join(", ")+")");rinit();draw();
+  }catch(err){note("ආයාත කරන්න බැරි වුණා: "+err.message)}
+ };
+ rd.readAsArrayBuffer(f);e.target.value="";
+};
+async function rxl(){
+ if(typeof ExcelJS==="undefined"){note("Excel පුස්තකාලය පූරණය නොවීය (අන්තර්ජාලය අවශ්‍යයි).");return}
+ try{
+  const BD={style:"thin",color:{argb:"FF000000"}},B4={top:BD,left:BD,bottom:BD,right:BD},FN="Iskoola Pota";
+  const fl=c=>({type:"pattern",pattern:"solid",fgColor:{argb:c}});
+  const wb=new ExcelJS.Workbook();wb.creator="ශ්‍රී ලංගම නුවරඑළිය";
+  const yrs=[...new Set([...Object.keys(S.rc).map(k=>+k.split("|")[0]),RC.y||S.y])].sort();
+  const put=(w,r,c,v,o={})=>{const x=w.getCell(r,c);x.value=v;if(o.note)x.note=o.note;x.font={name:FN,size:o.size||12,bold:!!o.b};x.alignment={horizontal:"center",vertical:"middle",wrapText:true};x.border=B4;if(o.fill)x.fill=fl(o.fill);return x};
+  yrs.forEach(y=>{
+   const w=wb.addWorksheet(String(y),{views:[{showGridLines:false}]});
+   w.getColumn(1).width=16;
+   for(let m=0;m<12;m++){const b=2+4*m;w.getColumn(b).width=8;w.getColumn(b+1).width=8;w.getColumn(b+2).width=10;w.getColumn(b+3).width=1.5}
+   w.getRow(1).height=26;w.getRow(2).height=34;
+   put(w,1,1,y,{b:true,size:14,fill:"FFCCCCFF"});put(w,2,1,"ඩිපෝව",{b:true,fill:"FFCCCCFF"});
+   for(let m=0;m<12;m++){const b=2+4*m;
+    put(w,1,b,MO[m],{b:true,size:13,fill:"FFCCCCFF"});put(w,1,b+1,undefined,{fill:"FFCCCCFF"});put(w,1,b+2,undefined,{fill:"FFCCCCFF"});w.mergeCells(1,b,1,b+2);
+    TY.forEach(([t,nm],j)=>put(w,2,b+j,nm,{b:true,fill:"FFCCCCFF"}));
+   }
+   D.forEach((d,i)=>{const r=3+i;w.getRow(r).height=24;put(w,r,1,d,{fill:"FFCCCCFF"});
+    for(let m=0;m<12;m++)TY.forEach(([t],j)=>{const kk=rk(y,m,i,t),v=S.rc[kk]||0,dd=(S.rd[kk]||"").replace(/-/g,".");put(w,r,2+4*m+j,v==1?"ඇත":v==2?"නැත":"",{fill:v==1?"FFD7F5DF":v==2?"FFFDE0E0":undefined,note:dd?"ලැබුණු දිනය: "+dd:undefined})});
+   });
+   w.pageSetup={paperSize:9,orientation:"landscape",fitToPage:true,fitToWidth:1,fitToHeight:1,horizontalCentered:true,margins:{left:.4,right:.4,top:.6,bottom:.6,header:.3,footer:.3}};
+  });
+  const buf=await wb.xlsx.writeBuffer(),a=document.createElement("a");
+  a.href=URL.createObjectURL(new Blob([buf],{type:"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"}));
+  a.download="vouchers_received.xlsx";document.body.appendChild(a);a.click();setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove()},500);
+ }catch(e){note("Excel හදන්න බැරි වුණා: "+e.message)}
+}
+
+/* ---- Backup ---- */
+const FS="showDirectoryPicker" in window;
+let bdir=null,btimer=null;
+const idb=()=>new Promise((res,rej)=>{const r=indexedDB.open("vsb",1);r.onupgradeneeded=()=>r.result.createObjectStore("h");r.onsuccess=()=>res(r.result);r.onerror=()=>rej(r.error)});
+const hput=async h=>{const d=await idb();return new Promise((res,rej)=>{const t=d.transaction("h","readwrite");t.objectStore("h").put(h,"dir");t.oncomplete=res;t.onerror=()=>rej(t.error)})};
+const hget=async()=>{const d=await idb();return new Promise((res,rej)=>{const q=d.transaction("h").objectStore("h").get("dir");q.onsuccess=()=>res(q.result);q.onerror=()=>rej(q.error)})};
+const bpath=()=>(lsg("vsparent")?lsg("vsparent")+" › ":"")+bdir.name;
+function bst(t,ok){const e=$("bs");e.textContent=t;e.style.color=ok===false?"#d92d20":ok?"#12a150":""}
+const bjson=()=>JSON.stringify({app:"voucher",v:1,saved:new Date().toISOString(),S});
+async function bperm(ask){
+ if(!bdir)return false;
+ let p=await bdir.queryPermission({mode:"readwrite"});
+ if(p!=="granted"&&ask)p=await bdir.requestPermission({mode:"readwrite"});
+ return p==="granted";
+}
+async function bwrite(){
+ if(!bdir)return;
+ if(!S.army.length&&!S.air.length&&!Object.keys(S.rc).length)return;
+ try{
+  if(!(await bperm(false))){bst("⚠ Backup ෆෝල්ඩරයට නැවත අවසර දෙන්න",false);$("bgr").style.display="";return}
+  const txt=bjson(),base="voucher-"+S.y+"-"+p2(S.m+1);
+  for(const n of[base+"-latest.json",base+"-"+new Date().toISOString().slice(0,10)+".json"]){
+   const f=await bdir.getFileHandle(n,{create:true});const w=await f.createWritable();await w.write(txt);await w.close();
+  }
+  bst("✔ අවසන් backup: "+new Date().toLocaleTimeString()+" ("+bpath()+")",true);$("bgr").style.display="none";
+ }catch(e){bst("Backup අසාර්ථකයි: "+e.message,false)}
+}
+function bq(){clearTimeout(btimer);btimer=setTimeout(bdir?bwrite:autoDl,1500)}
+let dtimer=null;
+const lsg=k=>{try{return localStorage.getItem(k)}catch(e){return null}},lss=(k,v)=>{try{localStorage.setItem(k,v)}catch(e){}};
+function bauto(on){lss("vsauto",on?"1":"0");if(on)autoDl();else bst("Auto backup (Downloads) නවත්වලා.")}
+function autoDl(){
+ if(bdir||lsg("vsauto")==="0")return;
+ if(!S.army.length&&!S.air.length&&!Object.keys(S.rc).length)return;
+ const wait=1800000-(Date.now()-(+lsg("vslast")||0));
+ clearTimeout(dtimer);
+ if(wait>0){dtimer=setTimeout(autoDl,wait+500);return}
+ const d=new Date();
+ bdl("voucher-backup-"+d.getFullYear()+"-"+p2(d.getMonth()+1)+"-"+p2(d.getDate())+"-"+p2(d.getHours())+p2(d.getMinutes())+".json");
+ lss("vslast",String(Date.now()));
+ bst("✔ Auto backup: Downloads ෆෝල්ඩරයට බාගත්තා ("+d.toLocaleTimeString()+")",true);
+}
+async function bpick(){
+ if(!FS){bst("මේ browser එකේ folder backup ක්‍රියා නොකරයි. Brave නම්: address bar එකේ brave://flags ගහලා \"File System Access API\" Enabled කරලා Relaunch කරන්න. නැත්නම් Chrome / Edge භාවිතා කරන්න, නැත්නම් Backup බාගන්න (.json) භාවිතා කරන්න.",false);return}
+ try{const par=await showDirectoryPicker({mode:"readwrite",id:"vsbackup"});bdir=par.name==="VoucherBackup"?par:await par.getDirectoryHandle("VoucherBackup",{create:true});lss("vsparent",par.name==="VoucherBackup"?"":par.name);try{await hput(bdir)}catch(e){}
+  if(S.army.length||S.air.length||Object.keys(S.rc).length)await bwrite();else bst("✔ Backup ෆෝල්ඩරය සකස් කළා: "+bpath()+". වවුචර් ඇතුලත් කළාම backup වේ.",true)}
+ catch(e){if(e.name!=="AbortError")bst("ෆෝල්ඩරය තෝරා ගන්න බැරි වුණා: "+e.message,false)}
+}
+async function bgrant(){try{if(await bperm(true))await bwrite()}catch(e){bst("අවසරය ලබා ගන්න බැරි වුණා: "+e.message,false)}}
+async function binit(){
+ if(!FS){bst("මේ browser එකේ folder backup ක්‍රියා නොකරයි (Brave නම් brave://flags හි \"File System Access API\" Enable කරන්න; Chrome / Edge වල කෙලින්ම වැඩ). Backup බාගන්න (.json) භාවිතා කරන්න.");return}
+ try{bdir=(await hget())||null}catch(e){bdir=null}
+ if(!bdir){bst("Backup ෆෝල්ඩරයක් තෝරලා නෑ."+(lsg("vsauto")==="0"?"":" (Downloads auto backup ක්‍රියාත්මකයි)"));return}
+ try{if(await bperm(false))await bwrite();else{bst("⚠ Backup ෆෝල්ඩරය ("+bdir.name+"): නැවත අවසර දෙන්න",false);$("bgr").style.display=""}}catch(e){}
+}
+function bdl(name){
+ const b=new Blob([bjson()],{type:"application/json"}),a=document.createElement("a");
+ a.href=URL.createObjectURL(b);a.download=(typeof name==="string"&&name)||("voucher-backup-"+S.y+"-"+p2(S.m+1)+".json");
+ document.body.appendChild(a);a.click();setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove()},500);
+}
+function brest(inp){
+ const f=inp.files[0];if(!f)return;const r=new FileReader();
+ r.onload=()=>{
+  try{
+   const j=JSON.parse(r.result),d=j.S||j;
+   const ck=a=>{if(!Array.isArray(a))throw 0;return a.map(x=>({d:+x.d,v:String(x.v),a:+x.a})).filter(x=>x.d>=0&&x.d<7&&x.v&&!isNaN(x.a))};
+   const army=ck(d.army),air=ck(d.air);
+   ask("මෙම backup එකෙන් ආපසු ගන්නද? (යුධ "+army.length+", ගුවන් "+air.length+") දැන් ඇති වවුචර් ඒවාට මාරු වේ.",()=>{
+    S.army=army;S.air=air;if(d.rc&&typeof d.rc==="object")S.rc=d.rc;if(d.rd&&typeof d.rd==="object")S.rd=d.rd;if(d.m>=0&&d.m<12)S.m=+d.m;if(d.y>1999)S.y=+d.y;fields();draw();note("Backup එකෙන් ආපසු ගත්තා.");
+   });
+  }catch(e){note("මේ backup ගොනුව හරි නැහැ.")}
+ };
+ r.readAsText(f);inp.value="";
+}
+$("tt").onchange=e=>{T.t=e.target.value;T.touched=true;tags()};
+$("ty").oninput=e=>{T.y=+e.target.value||T.y;T.touched=true;tags()};
+$("tp").onchange=e=>{["p2","p3","p8"].forEach(c=>$("tags").classList.toggle(c,c===e.target.value))};
+$("to").onchange=e=>{$("tags").classList.toggle("nob",!e.target.checked)};
+form("army","fa");form("air","fb");fields();draw();
+$("bauto").checked=lsg("vsauto")!=="0";
+binit();
+
+(function(){try{
+ var w=document.getElementById("instw"),b=document.getElementById("instb"),h=document.getElementById("insth"),dp=null;
+ var std=(window.matchMedia&&matchMedia("(display-mode: standalone)").matches)||navigator.standalone===true;
+ if(!std&&w){
+  var ios=/iphone|ipad|ipod/i.test(navigator.userAgent);
+  window.addEventListener("beforeinstallprompt",function(e){e.preventDefault();dp=e;w.style.display="";b.style.display=""});
+  window.addEventListener("appinstalled",function(){w.style.display="none";dp=null});
+  b.addEventListener("click",function(){if(!dp)return;dp.prompt();dp.userChoice.then(function(){dp=null;w.style.display="none"}).catch(function(){})});
+  if(ios){b.style.display="none";h.style.display="";h.textContent="iPhone: Safari හි Share බොත්තම → \"Add to Home Screen\" ඔබන්න.";w.style.display=""}
+ }
+ if("serviceWorker" in navigator&&(location.protocol==="https:"||location.hostname==="localhost"))navigator.serviceWorker.register("sw.js").catch(function(){});
+}catch(e){}})();
+</script>
+</body>
+</html>
